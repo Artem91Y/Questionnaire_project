@@ -68,6 +68,7 @@ public class QuestionnaireService {
         if (questionnaire.getStartTime() != null) {
             newQuestionnaire.setStartTime(questionnaire.getStartTime());
         }
+        newQuestionnaire.setId(id);
         try {
             questionnaireRepository.deleteById(id);
             questionnaireRepository.save(newQuestionnaire);

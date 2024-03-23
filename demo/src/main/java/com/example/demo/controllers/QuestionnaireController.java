@@ -4,6 +4,7 @@ import com.example.demo.models.Questionnaire;
 import com.example.demo.services.QuestionnaireService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +50,11 @@ public class QuestionnaireController {
     @GetMapping("/getQuestionnaire")
     public Questionnaire getQuestionnaire(@RequestParam Long id){
         return questionnaireService.getQuestionnaire(id);
+    }
+
+    @DeleteMapping("/deleteQuestionnaire")
+    public void deleteQuestionnaire(Long id){
+        questionnaireService.deleteQuestionnaire(id);
     }
 
 

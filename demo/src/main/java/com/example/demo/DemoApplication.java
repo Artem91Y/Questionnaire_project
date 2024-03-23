@@ -23,14 +23,12 @@ public class DemoApplication{
 		@Bean
 		CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
 			return args -> {
-				if (roleRepository.findByAuthority("ADMIN").isPresent()) return;
-				Role adminRole = roleRepository.save(new Role("ADMIN"));
-				if (roleRepository.findByAuthority("EMPLOYEE").isEmpty()){
-					roleRepository.save(new Role("EMPLOYEE"));
-				}
 				if (roleRepository.findByAuthority("USER").isEmpty()){
 					roleRepository.save(new Role("USER"));
 				}
+				if (roleRepository.findByAuthority("ADMIN").isPresent()) return;
+				Role adminRole = roleRepository.save(new Role("ADMIN"));
+
 
 				Set<Role> roles = new HashSet<>();
 				roles.add(adminRole);

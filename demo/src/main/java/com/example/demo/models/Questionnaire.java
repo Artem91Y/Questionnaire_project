@@ -1,12 +1,13 @@
 package com.example.demo.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -30,4 +31,7 @@ public class Questionnaire {
     @Column(name = "end_time")
 
     private LocalDate endTime;
+
+    @OneToMany(mappedBy = "question")
+    private List<Question> questions;
 }
