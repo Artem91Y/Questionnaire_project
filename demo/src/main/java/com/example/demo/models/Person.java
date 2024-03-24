@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "person")
+@Table(name = "person1")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -22,7 +22,7 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", unique = true)
     private String fullName;
 
     private String email;

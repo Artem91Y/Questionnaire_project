@@ -1,12 +1,12 @@
 package com.example.demo.models;
 
+import com.example.demo.models.enums.TypeOfAnswer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Map;
-import java.util.Set;
 
 @Entity
 @Table(name = "Question")

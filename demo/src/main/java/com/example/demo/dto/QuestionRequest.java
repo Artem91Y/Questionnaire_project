@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.models.Questionnaire;
-import com.example.demo.models.TypeOfAnswer;
+import com.example.demo.models.enums.TypeOfAnswer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

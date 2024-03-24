@@ -18,6 +18,7 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
+
     public ResponseEntity<String> addQuestion(QuestionRequest questionRequest){
         if (questionRequest.getName() == null
             || questionRequest.getQuestionnaire() == null
@@ -59,5 +60,13 @@ public class QuestionService {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Question isn't saved");
         }
+    }
+
+    public void deleteQuestion(Long id){
+        questionRepository.deleteById(id);
+    }
+
+    public Question getQuestion(Long id){
+        return questionRepository.findById(id).get();
     }
 }

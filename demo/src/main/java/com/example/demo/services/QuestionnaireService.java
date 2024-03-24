@@ -34,21 +34,6 @@ public class QuestionnaireService {
         }
     }
 
-    public Questionnaire getQuestionnaire(Long id) {
-        try {
-            return questionnaireRepository.findById(id).get();
-        } catch (Exception e) {
-            return new Questionnaire(null, null, "This questionnaire doesn't exist", null, null);
-        }
-    }
-
-    public List<Questionnaire> getAllQuestionnaires() {
-        try {
-            return questionnaireRepository.findAll();
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     public ResponseEntity<String> updateQuestionnaire(Questionnaire questionnaire, Long id) {
         Optional<Questionnaire> questionnaireForRemoval = questionnaireRepository.findById(id);

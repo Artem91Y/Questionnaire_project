@@ -21,13 +21,10 @@ public class CheckPermissions {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    private boolean NotAdminOrEmployee(Authentication authentication) {
-        return !(authentication.getName().equals("ADMIN"));
-    }
 
     public boolean hasPermission(Long id) {
         Authentication authentication = getUserFromContext();
-        if (NotAdminOrEmployee(authentication)) {
+        if (!(authentication.getName().equals("ADMIN"))) {
             return personRepository.findById(id).get().getUsername().equals(authentication.getName());
         }
         return true;

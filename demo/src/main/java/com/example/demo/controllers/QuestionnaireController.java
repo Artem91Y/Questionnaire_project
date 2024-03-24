@@ -4,10 +4,7 @@ import com.example.demo.models.Questionnaire;
 import com.example.demo.services.QuestionnaireService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -32,7 +29,7 @@ public class QuestionnaireController {
         return questionnaireService.addQuestionnaire(questionnaire);
     }
 
-    @PostMapping("/updateQuestionnaire")
+    @PutMapping("/updateQuestionnaire")
     public ResponseEntity<String> updateQuestionnaire(
             @RequestParam String name
             ,@RequestParam Long id
@@ -45,11 +42,6 @@ public class QuestionnaireController {
         questionnaire.setEndTime(endTime);
         questionnaire.setDescription(description);
         return questionnaireService.updateQuestionnaire(questionnaire, id);
-    }
-
-    @GetMapping("/getQuestionnaire")
-    public Questionnaire getQuestionnaire(@RequestParam Long id){
-        return questionnaireService.getQuestionnaire(id);
     }
 
     @DeleteMapping("/deleteQuestionnaire")
