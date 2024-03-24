@@ -1,10 +1,7 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "questions")
 public class Questionnaire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +27,8 @@ public class Questionnaire {
     private LocalDate startTime;
 
     @Column(name = "end_time")
-
     private LocalDate endTime;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "questionnaire")
     private List<Question> questions;
 }

@@ -22,8 +22,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((requests) -> {
-                requests.requestMatchers("/get","/sign_in/**").permitAll();
-                requests.requestMatchers("api/delete/**", "/update**", "/add**").hasAnyAuthority("ADMIN");
+                requests.requestMatchers("/get**","/sign_in/**").permitAll();
+                    requests.requestMatchers("passQuestionnaire/**", "/get**").hasAnyAuthority("USER", "ADMIN");
+                requests.requestMatchers("delete/**", "/update**", "/add**").hasAuthority("ADMIN");
                 requests.anyRequest().authenticated();
         })
                 .httpBasic(withDefaults())

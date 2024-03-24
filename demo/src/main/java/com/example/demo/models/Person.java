@@ -30,6 +30,7 @@ public class Person {
     @Column(unique = true)
     private String username;
 
+    @OneToMany
     private List<Question> questionsPassed;
 
 }

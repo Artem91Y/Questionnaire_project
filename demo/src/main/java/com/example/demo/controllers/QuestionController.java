@@ -5,10 +5,7 @@ import com.example.demo.models.Question;
 import com.example.demo.services.QuestionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class QuestionController {
@@ -24,13 +21,17 @@ public class QuestionController {
         return questionService.addQuestion(questionRequest);
     }
 
-    @PutMapping("/addQuestion")
-    public ResponseEntity<String> updateQuestion(@RequestBody QuestionRequest questionRequest){
-        return questionService.addQuestion(questionRequest);
+    @PutMapping("/updateQuestion/{id}")
+    public ResponseEntity<String> updateQuestion(@RequestBody QuestionRequest questionRequest, @PathVariable Long id){
+        return questionService.updateQuestion(questionRequest, id);
     }
 
     @GetMapping("/getQuestion")
     public Question getQuestion(Long id){
         return questionService.getQuestion(id);
+    }
+
+    public void deleteQuestion(Long id){
+        questionService.deleteQuestion(id);
     }
 }

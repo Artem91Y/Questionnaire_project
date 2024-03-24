@@ -83,15 +83,7 @@ public class PersonService {
         personRepository.deleteById(personId);
     }
 
-    public Person getPerson(long personId) {
-        return personRepository.findById(personId).get();
-    }
-
-    public List<Person> getAllPeople() {
-        return personRepository.findAll();
-    }
-
-    public ResponseEntity<String> passQuestionnaire(String fullName, Long questionnaireId, List<String> answers){
+    public ResponseEntity<String> passQuestionnaire(String username, Long questionnaireId, List<String> answers){
         Optional<Questionnaire> questionnaireForCheck = questionnaireRepository
                 .findById(questionnaireId);
         if (questionnaireForCheck.isEmpty()){
@@ -101,7 +93,7 @@ public class PersonService {
         Questionnaire questionnaire = questionnaireForCheck.get();
 
         Optional<Person> client = personRepository
-                .findByFullNameLikeIgnoreCase(fullName);
+                .findByUsername(username);
         if (client.isEmpty()){
             return ResponseEntity.status(HttpStatus
                     .NOT_FOUND).body("Person isn't found");
@@ -129,6 +121,9 @@ public class PersonService {
             result1.put(client.get().getId(), answers.get(i));
             question.setPersonIdToAnswer(result1);
             answeredQuestions.add(question);
+            List<Question> savedQuestions = client.get().getQuestionsPassed();
+            savedQuestions.add(question);
+            client.get().setQuestionsPassed(savedQuestions);
         }
         questionnaire.setQuestions(answeredQuestions);
         try {

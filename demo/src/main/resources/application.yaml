@@ -8,16 +8,5 @@ spring:
     hibernate:
       ddl-auto: update
 
-  mail:
-    host: smtp.mail.ru
-    port: 587
-    username: ${USER_MAIL}
-    password: ${PASS_MAIL}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls.enable: true
-
 server:
   port: 8080

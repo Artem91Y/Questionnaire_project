@@ -14,4 +14,6 @@ public interface PersonRepository
 
     List<Person> findByEmailLikeIgnoreCase(String email);
 
+    Optional<Person> findByUsername(String username);
+
 }
