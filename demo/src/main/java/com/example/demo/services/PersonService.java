@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.PersonRequest;
+import com.example.demo.models.Answer;
 import com.example.demo.models.Person;
 import com.example.demo.models.Question;
 import com.example.demo.models.Questionnaire;
@@ -98,8 +99,9 @@ public class PersonService {
             return ResponseEntity.status(HttpStatus
                     .NOT_FOUND).body("Person isn't found");
         }
+        Person answeringPerson = client.get();
 
-        if (!checkPermission.hasPermission(client.get().getId())){
+        if (!checkPermission.hasPermission(answeringPerson.getId())){
             return ResponseEntity.status(HttpStatus
                     .INTERNAL_SERVER_ERROR).body("You haven't permission for this service");
         }
@@ -117,16 +119,21 @@ public class PersonService {
         List<Question> answeredQuestions = new ArrayList<>();
         for (int i = 0; i < questions.size(); i ++) {
             Question question = questions.get(i);
-            Map<Long, String> result1 = question.getPersonIdToAnswer();
-            result1.put(client.get().getId(), answers.get(i));
-            question.setPersonIdToAnswer(result1);
+            Answer answer = new Answer();
+            answer.setPerson(answeringPerson);
+            answer.setAnswerText(answers.get(i));
+
+            List<Answer> answersForAdding = question.getAnswers();
+            answersForAdding.add(answer);
+            question.setAnswers(answersForAdding);
             answeredQuestions.add(question);
-            List<Question> savedQuestions = client.get().getQuestionsPassed();
+            List<Question> savedQuestions = answeringPerson.getQuestionsPassed();
             savedQuestions.add(question);
-            client.get().setQuestionsPassed(savedQuestions);
+            answeringPerson.setQuestionsPassed(savedQuestions);
         }
         questionnaire.setQuestions(answeredQuestions);
         try {
+            personRepository.save(answeringPerson);
             questionnaireRepository.save(questionnaire);
             return ResponseEntity.ok("Questionnaire passed successfully");
         } catch (Exception e){

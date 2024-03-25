@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.QuestionnaireRequest;
 import com.example.demo.models.Questionnaire;
 import com.example.demo.services.QuestionnaireService;
 import org.springframework.http.ResponseEntity;
@@ -17,30 +18,13 @@ public class QuestionnaireController {
     }
 
     @PostMapping("/addQuestionnaire")
-    public ResponseEntity<String> addQuestionnaire(@RequestParam String name
-            , @RequestParam String description
-            , @RequestParam LocalDate startTime
-            , @RequestParam LocalDate endTime){
-        Questionnaire questionnaire = new Questionnaire();
-        questionnaire.setName(name);
-        questionnaire.setStartTime(startTime);
-        questionnaire.setEndTime(endTime);
-        questionnaire.setDescription(description);
+    public ResponseEntity<String> addQuestionnaire(@RequestParam QuestionnaireRequest questionnaire){
         return questionnaireService.addQuestionnaire(questionnaire);
     }
 
-    @PutMapping("/updateQuestionnaire")
-    public ResponseEntity<String> updateQuestionnaire(
-            @RequestParam String name
-            ,@RequestParam Long id
-            , @RequestParam String description
-            , @RequestParam LocalDate startTime
-            , @RequestParam LocalDate endTime){
-        Questionnaire questionnaire = new Questionnaire();
-        questionnaire.setName(name);
-        questionnaire.setStartTime(startTime);
-        questionnaire.setEndTime(endTime);
-        questionnaire.setDescription(description);
+    @PutMapping("/updateQuestionnaire/{id}")
+    public ResponseEntity<String> updateQuestionnaire(@RequestBody QuestionnaireRequest questionnaire,@PathVariable Long id){
+
         return questionnaireService.updateQuestionnaire(questionnaire, id);
     }
 

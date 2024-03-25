@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
+@ToString(exclude = "questionsPassed")
 @EqualsAndHashCode
 public class Person {
     @Id

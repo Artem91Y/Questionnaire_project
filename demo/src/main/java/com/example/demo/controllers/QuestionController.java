@@ -26,12 +26,13 @@ public class QuestionController {
         return questionService.updateQuestion(questionRequest, id);
     }
 
-    @GetMapping("/getQuestion")
-    public Question getQuestion(Long id){
+    @GetMapping("/getQuestion/{id}")
+    public Question getQuestion(@PathVariable Long id){
         return questionService.getQuestion(id);
     }
 
-    public void deleteQuestion(Long id){
+    @DeleteMapping("/deleteQuestion/{id}")
+    public void deleteQuestion(@PathVariable Long id){
         questionService.deleteQuestion(id);
     }
 }

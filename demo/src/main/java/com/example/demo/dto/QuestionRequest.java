@@ -13,7 +13,7 @@ import java.util.Map;
 @Setter
 public class QuestionRequest {
 
-    private String name;
+    private String title;
 
 
     private Questionnaire questionnaire;
