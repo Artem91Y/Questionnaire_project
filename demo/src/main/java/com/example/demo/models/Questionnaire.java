@@ -1,11 +1,11 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 @Entity
 @Table(name = "questionnaire")
@@ -19,6 +19,7 @@ public class Questionnaire {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private String description;
@@ -29,6 +30,7 @@ public class Questionnaire {
     @Column(name = "end_time")
     private LocalDate endTime;
 
-    @OneToMany(mappedBy = "questionnaire")
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionnaire")
     private List<Question> questions;
 }

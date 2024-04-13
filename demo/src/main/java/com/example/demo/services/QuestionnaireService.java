@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +45,7 @@ public class QuestionnaireService {
 
     public ResponseEntity<String> updateQuestionnaire(QuestionnaireRequest questionnaire, Long id) {
         Optional<Questionnaire> questionnaireForRemoval = questionnaireRepository.findById(id);
-        if (questionnaireForRemoval.isEmpty()){
+        if (questionnaireForRemoval.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found");
         }
         Questionnaire newQuestionnaire = questionnaireForRemoval.get();
@@ -69,7 +71,30 @@ public class QuestionnaireService {
         }
     }
 
-    public void deleteQuestionnaire(Long id){
+//    public ResponseEntity<String> addQuestionToQuestionnaire(Long questionnaireId, Long questionId){
+//        Optional<Questionnaire> questionnaire = questionnaireRepository.findById(questionnaireId);
+//        if (questionnaire.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found");
+//        }
+//    }
+
+
+    public void deleteQuestionnaire(Long id) {
         questionnaireRepository.deleteById(id);
+    }
+
+    public Questionnaire getQuestionnaire(Long id) {
+        return questionnaireRepository.findById(id).get();
+    }
+
+    public List<Questionnaire> getActiveQuestionnaires(){
+//    TODO    Replace findAll with magic method
+        List<Questionnaire> questionnaires = new ArrayList<>();
+        for (Questionnaire questionnaire :questionnaireRepository.findAll()) {
+            if (LocalDate.now().isBefore(questionnaire.getStartTime()) && LocalDate.now().isAfter(questionnaire.getEndTime())){
+                questionnaires.add(questionnaire);
+            }
+        }
+        return questionnaires;
     }
 }

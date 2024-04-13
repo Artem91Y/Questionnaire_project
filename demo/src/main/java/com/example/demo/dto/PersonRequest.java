@@ -11,7 +11,5 @@ public class PersonRequest {
 
     private String fullName;
 
-    private String email;
-
-    private  String username;
+    private String username;
 }

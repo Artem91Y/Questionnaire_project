@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import com.example.demo.models.enums.TypeOfAnswer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,14 +24,16 @@ public class Question {
 
     private String title;
 
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "questionnaire_id", nullable = false)
+    @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
     private TypeOfAnswer type;
 
     @OneToMany
-    @JoinColumn(name = "answer_id", referencedColumnName = "id")
+    @JsonBackReference
+    @JoinColumn(name = "question_id")
     private List<Answer> answers;
 
 }

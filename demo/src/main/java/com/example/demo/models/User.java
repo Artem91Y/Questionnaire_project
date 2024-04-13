@@ -8,8 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 
+
 @Entity
-@Table(name = "user2")
+@Table(name = "user")
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -28,7 +29,7 @@ public class User implements UserDetails {
     private String userName;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role2", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> authorities;
 
 

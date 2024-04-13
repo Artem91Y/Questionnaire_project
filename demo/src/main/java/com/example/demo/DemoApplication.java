@@ -1,7 +1,9 @@
 package com.example.demo;
 
+import com.example.demo.models.Person;
 import com.example.demo.models.Role;
 import com.example.demo.models.User;
+import com.example.demo.repos.PersonRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,8 +23,15 @@ public class DemoApplication{
 		}
 
 		@Bean
-		CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
+		CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, PersonRepository personRepository){
+
 			return args -> {
+				if (personRepository.findByFullNameLikeIgnoreCase("anonymous").isEmpty()){
+					Person person = new Person();
+					person.setFullName("anonymous");
+					person.setUsername("anonymous");
+					personRepository.save(person);
+				}
 				if (roleRepository.findByAuthority("USER").isEmpty()){
 					roleRepository.save(new Role("USER"));
 				}

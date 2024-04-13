@@ -4,12 +4,11 @@ import com.example.demo.dto.QuestionnaireRequest;
 import com.example.demo.models.Questionnaire;
 import com.example.demo.services.QuestionnaireService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
-@Controller
+@RestController
 public class QuestionnaireController {
     private final QuestionnaireService questionnaireService;
 
@@ -18,20 +17,28 @@ public class QuestionnaireController {
     }
 
     @PostMapping("/addQuestionnaire")
-    public ResponseEntity<String> addQuestionnaire(@RequestParam QuestionnaireRequest questionnaire){
+    public ResponseEntity<String> addQuestionnaire(@RequestBody QuestionnaireRequest questionnaire) {
         return questionnaireService.addQuestionnaire(questionnaire);
     }
 
     @PutMapping("/updateQuestionnaire/{id}")
-    public ResponseEntity<String> updateQuestionnaire(@RequestBody QuestionnaireRequest questionnaire,@PathVariable Long id){
+    public ResponseEntity<String> updateQuestionnaire(@RequestBody QuestionnaireRequest questionnaire, @PathVariable Long id) {
 
         return questionnaireService.updateQuestionnaire(questionnaire, id);
     }
 
-    @DeleteMapping("/deleteQuestionnaire")
-    public void deleteQuestionnaire(Long id){
+    @DeleteMapping("/deleteQuestionnaire/{id}")
+    public void deleteQuestionnaire(@PathVariable Long id) {
         questionnaireService.deleteQuestionnaire(id);
     }
 
+    @GetMapping("/getQuestionnaire/{id}")
+    public Questionnaire getQuestionnaire(@PathVariable Long id) {
+        return questionnaireService.getQuestionnaire(id);
+    }
+    @GetMapping("/getActiveQuestionnaires")
+    public List<Questionnaire> getActiveQuestionnaires(){
+        return questionnaireService.getActiveQuestionnaires();
+    }
 
 }

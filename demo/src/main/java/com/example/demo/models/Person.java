@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "person1")
+@Table(name = "person")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString(exclude = "questionsPassed")
+@ToString(exclude = "questionnairesPassed")
 @EqualsAndHashCode
 public class Person {
     @Id
@@ -25,12 +25,12 @@ public class Person {
     @Column(name = "full_name", unique = true)
     private String fullName;
 
-    private String email;
 
     @Column(unique = true)
     private String username;
 
-    @OneToMany
-    private List<Question> questionsPassed;
+    @ManyToMany
+//    @JoinColumn(name = "passed_questionnaires_ids")
+    private Set<Questionnaire> questionnairesPassed;
 
 }

@@ -26,27 +26,27 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean saveUser(User user, Map<String, String> names) {
-
+    public boolean saveUser(User user, Map<String, String> roles) {
         Optional<User> userForComparison = userRepository.findByUserName(user.getUsername());
         if (userForComparison.isPresent()) {
             return false;
         }
 
         try {
+            user.setUserName(user.getUsername());
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            Set<Role> roles = new HashSet<>();
-            for (String name: names.values()) {
-                if (name.equals("ADMIN")){
+            Set<Role> userRoles = new HashSet<>();
+            for (String name : roles.values()) {
+                if (name.equals("ADMIN")) {
                     return false;
                 }
                 Optional<Role> role = roleRepository.findByAuthority(name);
-                if (role.isEmpty()){
+                if (role.isEmpty()) {
                     return false;
                 }
-                roles.add(role.get());
+                userRoles.add(role.get());
             }
-            user.setAuthorities(roles);
+            user.setAuthorities(userRoles);
 
             userRepository.save(user);
             return true;

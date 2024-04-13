@@ -8,4 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, Long>{
+
+    Questionnaire findByName(String name);
 }

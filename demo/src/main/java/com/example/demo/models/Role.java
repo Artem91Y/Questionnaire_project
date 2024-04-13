@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 
 @Entity
-@Table(name = "`role2`")
+@Table(name = "`role`")
 @Setter
 @Getter
 @EqualsAndHashCode

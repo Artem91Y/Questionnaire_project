@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -17,22 +17,28 @@ public class QuestionController {
     }
 
     @PostMapping("/addQuestion")
-    public ResponseEntity<String> addQuestion(@RequestBody QuestionRequest questionRequest){
+    public ResponseEntity<String> addQuestion(@RequestBody QuestionRequest questionRequest) {
         return questionService.addQuestion(questionRequest);
     }
 
+//    TODO понять что не так
     @PutMapping("/updateQuestion/{id}")
-    public ResponseEntity<String> updateQuestion(@RequestBody QuestionRequest questionRequest, @PathVariable Long id){
+    public ResponseEntity<String> updateQuestion(@RequestBody QuestionRequest questionRequest, @PathVariable Long id) {
         return questionService.updateQuestion(questionRequest, id);
     }
 
     @GetMapping("/getQuestion/{id}")
-    public Question getQuestion(@PathVariable Long id){
+    public Question getQuestion(@PathVariable Long id) {
         return questionService.getQuestion(id);
     }
 
     @DeleteMapping("/deleteQuestion/{id}")
-    public void deleteQuestion(@PathVariable Long id){
+    public void deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);
+    }
+
+    @DeleteMapping("/deleteAnswer/{id}")
+    public void deleteAnswer(@PathVariable Long id, @RequestParam Long answerId) {
+        questionService.deleteQuestionsAnswer(id, answerId);
     }
 }
