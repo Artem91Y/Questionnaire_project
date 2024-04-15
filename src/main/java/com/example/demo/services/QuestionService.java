@@ -58,16 +58,14 @@ public class QuestionService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Question isn't found");
         }
-        Question question = new Question();
+        Question question = newQuestion.get();
         if (questionRequest.getTitle() != null) {
             question.setTitle(questionRequest.getTitle());
         }
         if (questionRequest.getType() != null) {
             question.setType(questionRequest.getType());
         }
-        question.setId(id);
         try {
-            questionRepository.deleteById(id);
             questionRepository.save(question);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Question is updated successfully");

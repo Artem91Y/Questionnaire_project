@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.PersonRequest;
+import com.example.demo.dto.QuestionRequest;
 import com.example.demo.models.Answer;
 import com.example.demo.models.Person;
 import com.example.demo.models.Question;
@@ -152,7 +153,7 @@ public class PersonService {
         return personFromDB.get().getQuestionnairesPassed();
     }
 
-    public Map<String, Map<Question, String>> getPassedQuestionnairesWithDetails(){
+    public Map<String, Map<QuestionRequest, String>> getPassedQuestionnairesWithDetails(){
         Person person;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName().equals("anonymousUser")) {
@@ -165,13 +166,13 @@ public class PersonService {
             person = answeringPersonFromDB.get();
         }
         Set<Questionnaire> questionnaires = person.getQuestionnairesPassed();
-        Map<String, Map<Question, String>> result = new HashMap<>();
+        Map<String, Map<QuestionRequest, String>> result = new HashMap<>();
         for (Questionnaire questionnaire :questionnaires) {
             for (Question question :questionnaire.getQuestions()) {
                 for (Answer answer :question.getAnswers()) {
                     if (answer.getPerson().equals(person)){
-//                        TODO put question dto instead of question
-                        result.put(questionnaire.getName(), Map.of(question, answer.getAnswerText()));
+                        QuestionRequest questionRequest = new QuestionRequest(question.getTitle(), questionnaire.getName(), question.getType());
+                        result.put(questionnaire.getName(), Map.of(questionRequest, answer.getAnswerText()));
                     }
                 }
             }

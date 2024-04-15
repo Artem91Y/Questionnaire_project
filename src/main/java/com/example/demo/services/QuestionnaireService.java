@@ -61,9 +61,7 @@ public class QuestionnaireService {
         if (questionnaire.getStartTime() != null) {
             newQuestionnaire.setStartTime(questionnaire.getStartTime());
         }
-        newQuestionnaire.setId(id);
         try {
-            questionnaireRepository.deleteById(id);
             questionnaireRepository.save(newQuestionnaire);
             return ResponseEntity.status(HttpStatus.CREATED).body("Questionnaire is updated successfully");
         } catch (Exception e) {
@@ -88,13 +86,6 @@ public class QuestionnaireService {
     }
 
     public List<Questionnaire> getActiveQuestionnaires(){
-//    TODO    Replace findAll with magic method
-        List<Questionnaire> questionnaires = new ArrayList<>();
-        for (Questionnaire questionnaire :questionnaireRepository.findAll()) {
-            if (LocalDate.now().isBefore(questionnaire.getStartTime()) && LocalDate.now().isAfter(questionnaire.getEndTime())){
-                questionnaires.add(questionnaire);
-            }
-        }
-        return questionnaires;
+        return questionnaireRepository.findActiveQuestionnaires(LocalDate.now());
     }
 }

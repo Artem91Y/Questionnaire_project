@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.PersonRequest;
+import com.example.demo.dto.QuestionRequest;
 import com.example.demo.models.Answer;
 import com.example.demo.models.Person;
 import com.example.demo.models.Question;
@@ -44,14 +45,8 @@ public class PersonController {
         return personService.passQuestionnaire(questionnaireId, answers);
     }
 
-//    TODO delete controller and service getPersonQuestionnaires
-    @GetMapping("/getPersonQuestionnaires/{id}")
-    public Set<Questionnaire> getPersonQuestionnaires(@PathVariable Long id){
-        return personService.getPersonQuestionnaires(id);
-    }
-
     @GetMapping("/getPassedQuestionnairesWithDetails")
-    public Map<String, Map<Question, String>> getPassedQuestionnairesWithDetails(){
+    public Map<String, Map<QuestionRequest, String>> getPassedQuestionnairesWithDetails(){
         return personService.getPassedQuestionnairesWithDetails();
     }
 

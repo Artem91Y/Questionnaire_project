@@ -6,6 +6,7 @@ import com.example.demo.models.enums.TypeOfAnswer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class QuestionRequest {
 
     private String title;
@@ -20,7 +22,4 @@ public class QuestionRequest {
     private String questionnaireName;
 
     private TypeOfAnswer type;
-
-    private List<Answer> answers;
-//    TODO remove this field
 }

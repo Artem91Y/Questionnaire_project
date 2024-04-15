@@ -21,9 +21,8 @@ public class QuestionController {
         return questionService.addQuestion(questionRequest);
     }
 
-//    TODO понять что не так
     @PutMapping("/updateQuestion/{id}")
-    public ResponseEntity<String> updateQuestion(@RequestBody QuestionRequest questionRequest, @PathVariable Long id) {
+    public ResponseEntity<String> updateQuestion(@PathVariable Long id, @RequestBody QuestionRequest questionRequest) {
         return questionService.updateQuestion(questionRequest, id);
     }
 
