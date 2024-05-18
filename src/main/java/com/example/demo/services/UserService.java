@@ -27,28 +27,29 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     public boolean saveUser(User user, Map<String, String> roles) {
+        if (roles.isEmpty()){
+            return false;
+        }
         Optional<User> userForComparison = userRepository.findByUserName(user.getUsername());
         if (userForComparison.isPresent()) {
             return false;
         }
 
         try {
-            user.setUserName(user.getUsername());
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            User userForSave = new User();
+            userForSave.setUserName(user.getUsername());
+            userForSave.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             Set<Role> userRoles = new HashSet<>();
             for (String name : roles.values()) {
                 if (name.equals("ADMIN")) {
                     return false;
                 }
                 Optional<Role> role = roleRepository.findByAuthority(name);
-                if (role.isEmpty()) {
-                    return false;
-                }
                 userRoles.add(role.get());
             }
-            user.setAuthorities(userRoles);
+            userForSave.setAuthorities(userRoles);
 
-            userRepository.save(user);
+            userRepository.save(userForSave);
             return true;
 
         } catch (Exception e) {

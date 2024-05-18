@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,12 +86,14 @@ public class QuestionService {
         if (questionFromDB.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question isn't found");
         }
-        if (!questionFromDB.get().getAnswers().contains(answer)) {
+        if (questionFromDB.get().getAnswers() == null || !questionFromDB.get().getAnswers().contains(answer)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Question doesn't contain this answer");
         }
         List<Answer> currentAnswers = questionFromDB.get().getAnswers();
-        currentAnswers.remove(answer);
+        LinkedList<Answer> newCurrentAnswers = new LinkedList<>(currentAnswers);
+        newCurrentAnswers.remove(answer);
+        currentAnswers = newCurrentAnswers.stream().toList();
         questionFromDB.get().setAnswers(currentAnswers);
         try {
             questionRepository.save(questionFromDB.get());

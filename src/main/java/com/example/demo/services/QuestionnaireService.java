@@ -69,13 +69,6 @@ public class QuestionnaireService {
         }
     }
 
-//    public ResponseEntity<String> addQuestionToQuestionnaire(Long questionnaireId, Long questionId){
-//        Optional<Questionnaire> questionnaire = questionnaireRepository.findById(questionnaireId);
-//        if (questionnaire.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found");
-//        }
-//    }
-
 
     public void deleteQuestionnaire(Long id) {
         questionnaireRepository.deleteById(id);

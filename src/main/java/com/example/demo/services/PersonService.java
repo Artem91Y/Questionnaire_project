@@ -103,23 +103,23 @@ public class PersonService {
             answeringPerson = answeringPersonFromDB.get();
         }
 
-
-
         List<Question> questions = questionnaireForCheck
                 .get().getQuestions();
-        if (questions.size() < answers.size()) {
+        if (questions.size() > answers.size()) {
             return ResponseEntity.status(HttpStatus
                     .INTERNAL_SERVER_ERROR).body("You haven't answered all the question");
-        } else if (questions.size() > answers.size()) {
+        } else if (questions.size() < answers.size()) {
             return ResponseEntity.status(HttpStatus
                     .INTERNAL_SERVER_ERROR).body("You gave too many answers");
         }
-
-        if (answeringPerson.getQuestionnairesPassed().contains(questionnaire)) {
+        Set<Questionnaire> answeringPersonQuestionnaires = answeringPerson.getQuestionnairesPassed();
+        if (answeringPersonQuestionnaires == null){
+            answeringPersonQuestionnaires = new HashSet<>();
+        }
+        if (answeringPersonQuestionnaires.contains(questionnaire)) {
             return ResponseEntity.status(HttpStatus
                     .INTERNAL_SERVER_ERROR).body("You have already passed this questionnaire");
         }
-        Set<Questionnaire> answeringPersonQuestionnaires = answeringPerson.getQuestionnairesPassed();
         answeringPersonQuestionnaires.add(questionnaire);
         answeringPerson.setQuestionnairesPassed(answeringPersonQuestionnaires);
         List<Question> answeredQuestions = new ArrayList<>();
@@ -131,7 +131,12 @@ public class PersonService {
                 answer.setAnswerText(answers.get(i));
 
                 List<Answer> answersForAdding = question.getAnswers();
-                answersForAdding.add(answer);
+                if (answersForAdding != null){
+                    answersForAdding.add(answer);
+                }
+                else{
+                    answersForAdding = List.of(answer);
+                }
                 question.setAnswers(answersForAdding);
                 answeredQuestions.add(question);
                 answerRepository.save(answer);
@@ -141,19 +146,21 @@ public class PersonService {
             questionnaireRepository.save(questionnaire);
             return ResponseEntity.ok("Questionnaire passed successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus
                     .INTERNAL_SERVER_ERROR).body("Questionnaire isn't passed");
         }
     }
-    public Set<Questionnaire> getPersonQuestionnaires(Long id){
+
+    public Set<Questionnaire> getPersonQuestionnaires(Long id) {
         Optional<Person> personFromDB = personRepository.findById(id);
-        if (personFromDB.isEmpty()){
+        if (personFromDB.isEmpty()) {
             return null;
         }
         return personFromDB.get().getQuestionnairesPassed();
     }
 
-    public Map<String, Map<QuestionRequest, String>> getPassedQuestionnairesWithDetails(){
+    public Map<String, Map<QuestionRequest, String>> getPassedQuestionnairesWithDetails() {
         Person person;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName().equals("anonymousUser")) {
@@ -167,10 +174,10 @@ public class PersonService {
         }
         Set<Questionnaire> questionnaires = person.getQuestionnairesPassed();
         Map<String, Map<QuestionRequest, String>> result = new HashMap<>();
-        for (Questionnaire questionnaire :questionnaires) {
-            for (Question question :questionnaire.getQuestions()) {
-                for (Answer answer :question.getAnswers()) {
-                    if (answer.getPerson().equals(person)){
+        for (Questionnaire questionnaire : questionnaires) {
+            for (Question question : questionnaire.getQuestions()) {
+                for (Answer answer : question.getAnswers()) {
+                    if (answer.getPerson().equals(person)) {
                         QuestionRequest questionRequest = new QuestionRequest(question.getTitle(), questionnaire.getName(), question.getType());
                         result.put(questionnaire.getName(), Map.of(questionRequest, answer.getAnswerText()));
                     }
