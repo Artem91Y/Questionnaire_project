@@ -54,12 +54,12 @@ public class PersonService {
         }
     }
 
-    public ResponseEntity<String> updatePerson(long id
+    public ResponseEntity<String> updatePerson(String fullName
             , PersonRequest personForCreating) {
-        Optional<Person> person = personRepository.findById(id);
+        Optional<Person> person = personRepository.findByFullNameLikeIgnoreCase(fullName);
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(String.format("Person %s number not found", id));
+                    .body(String.format("%s not found", fullName));
         }
 
         Person createdPerson = person.get();
@@ -77,13 +77,13 @@ public class PersonService {
         }
     }
 
-    public ResponseEntity<Person> deletePerson(long personId) {
+    public ResponseEntity<Person> deletePerson(String fullName) {
         try {
-            if (personRepository.findById(personId).isEmpty()){
+            if (personRepository.findByFullNameLikeIgnoreCase(fullName).isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            Person person = personRepository.findById(personId).get();
-            personRepository.deleteById(personId);
+            Person person = personRepository.findByFullNameLikeIgnoreCase(fullName).get();
+            personRepository.deleteById(person.getId());
             return ResponseEntity.status(HttpStatus.OK).body(person);
 
         }catch (Exception e){

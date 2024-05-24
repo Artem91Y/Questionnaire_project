@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class QuestionnaireServiceTest {
@@ -43,16 +44,16 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void TestUpdateQuestionnairePositive(){
-        when(questionnaireRepository.findById(1L)).thenReturn(Optional.of(new Questionnaire(1L, "vds", "vgfds", null, null, null)));
-        ResponseEntity<String> response = questionnaireService.updateQuestionnaire(new QuestionnaireRequest(LocalDate.of(2020, 12, 1), LocalDate.now(), "vda", "bnjiuk"), (long) 1L);
+        when(questionnaireRepository.findByName(any())).thenReturn(Optional.of(new Questionnaire(1L, "vds", "vgfds", null, null, null)));
+        ResponseEntity<String> response = questionnaireService.updateQuestionnaire(new QuestionnaireRequest(LocalDate.of(2020, 12, 1), LocalDate.now(), "vda", "bnjiuk"), "name");
         ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.CREATED).body("Questionnaire is updated successfully");
         assertEquals(response, expected);
     }
 
     @Test
     public void TestUpdateQuestionnaireNegativeBecauseOfWrongId(){
-        when(questionnaireRepository.findById(1L)).thenReturn(Optional.empty());
-        ResponseEntity<String> response = questionnaireService.updateQuestionnaire(new QuestionnaireRequest(LocalDate.of(2020, 12, 1), LocalDate.now(), "vda", "bnjiuk"), (long) 1L);
+        when(questionnaireRepository.findByName(any())).thenReturn(Optional.empty());
+        ResponseEntity<String> response = questionnaireService.updateQuestionnaire(new QuestionnaireRequest(LocalDate.of(2020, 12, 1), LocalDate.now(), "vda", "bnjiuk"), "name");
         ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found");
         assertEquals(response, expected);
     }

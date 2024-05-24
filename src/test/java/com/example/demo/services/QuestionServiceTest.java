@@ -42,8 +42,8 @@ public class QuestionServiceTest {
 
     @Test
     public void TestAddQuestionPositive() {
-        when(questionnaireRepository.findByName("mathematics")).thenReturn(
-                new Questionnaire(1L, "mathematics", "description", null, null, null));
+        when(questionnaireRepository.findByName("mathematics")).thenReturn(Optional.of(
+                new Questionnaire(1L, "mathematics", "description", null, null, null)));
 
         ResponseEntity<String> response = questionService.addQuestion(
                 new QuestionRequest("cfae", "mathematics", TypeOfAnswer.ONE_ANSWER));
@@ -54,8 +54,8 @@ public class QuestionServiceTest {
 
     @Test
     public void TestAddQuestionNegativeNotFullObject() {
-        when(questionnaireRepository.findByName("mathematics")).thenReturn(
-                new Questionnaire(1L, "mathematics", "description", null, null, null));
+        when(questionnaireRepository.findByName("mathematics")).thenReturn(Optional.of(
+                new Questionnaire(1L, "mathematics", "description", null, null, null)));
 
         ResponseEntity<String> response = questionService.addQuestion(
                 new QuestionRequest("cfae", "mathematics", null));
