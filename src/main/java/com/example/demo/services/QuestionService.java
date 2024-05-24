@@ -53,8 +53,8 @@ public class QuestionService {
         }
     }
 
-    public ResponseEntity<String> updateQuestion(QuestionRequest questionRequest, Long id) {
-        Optional<Question> newQuestion = questionRepository.findById(id);
+    public ResponseEntity<String> updateQuestion(QuestionRequest questionRequest, String title) {
+        Optional<Question> newQuestion = questionRepository.findQuestionByTitle(title);
         if (newQuestion.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Question isn't found");
@@ -108,27 +108,26 @@ public class QuestionService {
     }
 
 
-//    TODO remake delete ResponseEntity<String> -> ResponseEntity<Question>
-    public ResponseEntity<String> deleteQuestion(Long id) {
+    public ResponseEntity<Question> deleteQuestion(String title) {
         try {
-            if (questionRepository.findById(id).isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question doesn't exist");
+            if (questionRepository.findQuestionByTitle(title).isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            Question question = questionRepository.findById(id).get();
-            questionRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(question.toString());
+            Question question = questionRepository.findQuestionByTitle(title).get();
+            questionRepository.deleteById(question.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(question);
 
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete question");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
     }
 
 
-    public ResponseEntity<Question> getQuestion(Long id) {
+    public ResponseEntity<Question> getQuestion(String title) {
         try {
-            if (questionRepository.findById(id).isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(questionRepository.findById(id).get());
+            if (questionRepository.findQuestionByTitle(title).isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(questionRepository.findQuestionByTitle(title).get());
             }
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

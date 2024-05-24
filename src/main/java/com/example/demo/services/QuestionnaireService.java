@@ -68,33 +68,30 @@ public class QuestionnaireService {
         }
     }
 
-//      TODO remake delete ResponseEntity<String> -> ResponseEntity<Questionnaire>
-
-    public ResponseEntity<String> deleteQuestionnaire(Long id) {
+    public ResponseEntity<Questionnaire> deleteQuestionnaire(Long id) {
         try {
             if (questionnaireRepository.findById(id).isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire doesn't exist");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             Questionnaire question = questionnaireRepository.findById(id).get();
             questionnaireRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(question.toString());
+            return ResponseEntity.status(HttpStatus.OK).body(question);
 
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete Questionnaire");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
 
-//      TODO remake get ResponseEntity<String> -> ResponseEntity<Questionnaire>
-    public ResponseEntity<String> getQuestionnaire(Long id) {
+    public ResponseEntity<Questionnaire> getQuestionnaire(Long id) {
         try {
             if (questionnaireRepository.findById(id).isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(questionnaireRepository.findById(id).get().toString());
+                return ResponseEntity.status(HttpStatus.OK).body(questionnaireRepository.findById(id).get());
             }
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to get Questionnaire");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
 

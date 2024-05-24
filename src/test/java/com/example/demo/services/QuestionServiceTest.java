@@ -68,22 +68,22 @@ public class QuestionServiceTest {
         Question question = new Question();
         question.setTitle("vgsw");
         question.setId(1L);
-        when(questionRepository.findById(1L))
+        when(questionRepository.findQuestionByTitle("title"))
                 .thenReturn(Optional.of(question));
 
         ResponseEntity<String> response = questionService.updateQuestion(
-                new QuestionRequest("cfae", "mathematics", TypeOfAnswer.ONE_ANSWER), 1L);
+                new QuestionRequest("cfae", "mathematics", TypeOfAnswer.ONE_ANSWER), "title");
         assertEquals(ResponseEntity.status(HttpStatus.CREATED).body("Question is updated successfully"), response);
 
     }
 
     @Test
     public void TestUpdateQuestionNegativeWrongId() {
-        when(questionRepository.findById(1L))
+        when(questionRepository.findQuestionByTitle("title"))
                 .thenReturn(Optional.empty());
 
         ResponseEntity<String> response = questionService.updateQuestion(
-                new QuestionRequest("cfae", "mathematics", TypeOfAnswer.ONE_ANSWER), 1L);
+                new QuestionRequest("cfae", "mathematics", TypeOfAnswer.ONE_ANSWER), "title");
         assertEquals(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question isn't found"), response);
     }
 
@@ -96,7 +96,7 @@ public class QuestionServiceTest {
         question.setTitle("title");
         question.setId(1L);
         question.setAnswers(List.of(answer));
-        when(questionRepository.findById(1L))
+        when(questionRepository.findQuestionByTitle("title"))
                 .thenReturn(Optional.of(question));
         when(answerRepository.findById(1L)).thenReturn(Optional.of(answer));
         ResponseEntity<String> response = questionService.deleteQuestionsAnswer("title", 1L);
@@ -123,37 +123,37 @@ public class QuestionServiceTest {
 
     @Test
     public void TestGetQuestionPositive() {
-        when(questionRepository.findById(any())).thenReturn(Optional.of(
-                new Question(1L, "title", null, TypeOfAnswer.STRING, null)));
-        ResponseEntity<Question> response = questionService.getQuestion(1L);
+        Question question = new Question(1L, "title", null, TypeOfAnswer.STRING, null);
+        when(questionRepository.findQuestionByTitle("title")).thenReturn(Optional.of(question));
+        ResponseEntity<Question> response = questionService.getQuestion("title");
         ResponseEntity<Question> expected = ResponseEntity.status(HttpStatus.OK)
-                .body(new Question(1L, "title", null, TypeOfAnswer.STRING, null));
+                .body(question);
         assertEquals(expected, response);
     }
 
     @Test
     public void TestGetQuestionNegativeNotFoundQuestion() {
         when(questionRepository.findById(any())).thenReturn(Optional.empty());
-        ResponseEntity<Question> response = questionService.getQuestion(1L);
+        ResponseEntity<Question> response = questionService.getQuestion("title");
         ResponseEntity<Question> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         assertEquals(expected, response);
     }
 
     @Test
     public void TestDeleteQuestionNegativeNotFoundQuestion() {
-        when(questionRepository.findById(any())).thenReturn(Optional.empty());
-        ResponseEntity<String> response = questionService.deleteQuestion(1L);
-        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question doesn't exist");
+        when(questionRepository.findQuestionByTitle("title")).thenReturn(Optional.empty());
+        ResponseEntity<Question> response = questionService.deleteQuestion("title");
+        ResponseEntity<Question> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         assertEquals(expected, response);
     }
 
     @Test
     public void TestDeleteQuestionPositive() {
-        when(questionRepository.findById(any())).thenReturn(Optional.of(
-                new Question(1L, "title", null, TypeOfAnswer.STRING, null)));
-        ResponseEntity<String> response = questionService.deleteQuestion(1L);
-        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.OK)
-                .body(new Question(1L, "title", null, TypeOfAnswer.STRING, null).toString());
+        Question question = new Question(1L, "title", null, TypeOfAnswer.STRING, null);
+        when(questionRepository.findQuestionByTitle("title")).thenReturn(Optional.of(question));
+        ResponseEntity<Question> response = questionService.deleteQuestion("title");
+        ResponseEntity<Question> expected = ResponseEntity.status(HttpStatus.OK)
+                .body(question);
         assertEquals(expected, response);
     }
 
@@ -166,7 +166,7 @@ public class QuestionServiceTest {
         Question question = new Question();
         question.setTitle("title");
         question.setId(1L);
-        when(questionRepository.findById(1L))
+        when(questionRepository.findQuestionByTitle("title"))
                 .thenReturn(Optional.of(question));
         when(answerRepository.findById(1L)).thenReturn(Optional.of(answer));
         ResponseEntity<String> response = questionService.deleteQuestionsAnswer("title", 1L);

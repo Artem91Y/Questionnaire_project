@@ -21,18 +21,18 @@ public class QuestionController {
     }
 
     @PutMapping("/updateQuestion/{id}")
-    public ResponseEntity<String> updateQuestion(@PathVariable Long id, @RequestBody QuestionRequest questionRequest) {
-        return questionService.updateQuestion(questionRequest, id);
+    public ResponseEntity<String> updateQuestion(@RequestParam String title, @RequestBody QuestionRequest questionRequest) {
+        return questionService.updateQuestion(questionRequest, title);
     }
 
     @GetMapping("/getQuestion/{id}")
-    public ResponseEntity<Question> getQuestion(@PathVariable Long id) {
-        return questionService.getQuestion(id);
+    public ResponseEntity<Question> getQuestion(@RequestParam String title) {
+        return questionService.getQuestion(title);
     }
 
     @DeleteMapping("/deleteQuestion/{id}")
-    public void deleteQuestion(@PathVariable Long id) {
-        questionService.deleteQuestion(id);
+    public ResponseEntity<Question> deleteQuestion(@RequestParam String title) {
+        return questionService.deleteQuestion(title);
     }
 
     @DeleteMapping("/deleteAnswer/{id}")
