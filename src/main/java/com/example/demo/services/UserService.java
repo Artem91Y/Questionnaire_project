@@ -59,10 +59,10 @@ public class UserService implements UserDetailsService {
 
     public User findUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if (user.get() != null) {
-            return user.get();
-        } else {
+        if (user.get() == null) {
             return new User();
+        } else {
+            return user.get();
         }
     }
 

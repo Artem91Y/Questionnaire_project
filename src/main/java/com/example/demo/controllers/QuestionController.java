@@ -4,7 +4,6 @@ import com.example.demo.dto.QuestionRequest;
 import com.example.demo.models.Question;
 import com.example.demo.services.QuestionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +26,7 @@ public class QuestionController {
     }
 
     @GetMapping("/getQuestion/{id}")
-    public Question getQuestion(@PathVariable Long id) {
+    public ResponseEntity<Question> getQuestion(@PathVariable Long id) {
         return questionService.getQuestion(id);
     }
 
@@ -37,7 +36,7 @@ public class QuestionController {
     }
 
     @DeleteMapping("/deleteAnswer/{id}")
-    public void deleteAnswer(@PathVariable Long id, @RequestParam Long answerId) {
-        questionService.deleteQuestionsAnswer(id, answerId);
+    public ResponseEntity<String> deleteAnswer(@PathVariable Long answerId, @RequestParam String title) {
+        return questionService.deleteQuestionsAnswer(title, answerId);
     }
 }

@@ -2,11 +2,7 @@ package com.example.demo.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity

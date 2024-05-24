@@ -77,8 +77,18 @@ public class PersonService {
         }
     }
 
-    public void deletePerson(long personId) {
-        personRepository.deleteById(personId);
+    public ResponseEntity<Person> deletePerson(long personId) {
+        try {
+            if (personRepository.findById(personId).isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            Person person = personRepository.findById(personId).get();
+            personRepository.deleteById(personId);
+            return ResponseEntity.status(HttpStatus.OK).body(person);
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     public ResponseEntity<String> passQuestionnaire(Long questionnaireId, List<String> answers) {

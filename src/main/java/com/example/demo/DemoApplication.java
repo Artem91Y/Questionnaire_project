@@ -4,13 +4,13 @@ import com.example.demo.models.Person;
 import com.example.demo.models.Role;
 import com.example.demo.models.User;
 import com.example.demo.repos.PersonRepository;
+import com.example.demo.repos.RoleRepository;
+import com.example.demo.repos.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.example.demo.repos.RoleRepository;
-import com.example.demo.repos.UserRepository;
 
 import java.util.HashSet;
 import java.util.Set;

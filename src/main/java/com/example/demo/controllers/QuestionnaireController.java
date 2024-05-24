@@ -28,12 +28,12 @@ public class QuestionnaireController {
     }
 
     @DeleteMapping("/deleteQuestionnaire/{id}")
-    public void deleteQuestionnaire(@PathVariable Long id) {
-        questionnaireService.deleteQuestionnaire(id);
+    public ResponseEntity<String> deleteQuestionnaire(@PathVariable Long id) {
+        return questionnaireService.deleteQuestionnaire(id);
     }
 
     @GetMapping("/getQuestionnaire/{id}")
-    public Questionnaire getQuestionnaire(@PathVariable Long id) {
+    public ResponseEntity<String> getQuestionnaire(@PathVariable Long id) {
         return questionnaireService.getQuestionnaire(id);
     }
     @GetMapping("/getActiveQuestionnaires")

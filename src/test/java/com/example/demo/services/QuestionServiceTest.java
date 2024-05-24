@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -87,51 +88,88 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void TestDeleteQuestionAnswerPositive(){
+    public void TestDeleteQuestionAnswerPositive() {
         Answer answer = new Answer();
         answer.setId(1L);
         answer.setAnswerText("faqed");
         Question question = new Question();
-        question.setTitle("vgsw");
+        question.setTitle("title");
         question.setId(1L);
         question.setAnswers(List.of(answer));
         when(questionRepository.findById(1L))
                 .thenReturn(Optional.of(question));
         when(answerRepository.findById(1L)).thenReturn(Optional.of(answer));
-        ResponseEntity<String> response = questionService.deleteQuestionsAnswer(1L, 1L);
+        ResponseEntity<String> response = questionService.deleteQuestionsAnswer("title", 1L);
         ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.OK).body("Answer is deleted successfully");
         assertEquals(expected, response);
     }
 
     @Test
-    public void TestDeleteQuestionAnswerNegativeNotFoundObject(){
+    public void TestDeleteQuestionAnswerNegativeNotFoundObject() {
         Answer answer = new Answer();
         answer.setId(1L);
         answer.setAnswerText("faqed");
         Question question = new Question();
-        question.setTitle("vgsw");
+        question.setTitle("title");
         question.setId(1L);
         question.setAnswers(List.of(answer));
         when(questionRepository.findById(1L))
                 .thenReturn(Optional.empty());
         when(answerRepository.findById(1L)).thenReturn(Optional.of(answer));
-        ResponseEntity<String> response = questionService.deleteQuestionsAnswer(1L, 1L);
+        ResponseEntity<String> response = questionService.deleteQuestionsAnswer("title", 1L);
         ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question isn't found");
         assertEquals(expected, response);
     }
 
     @Test
-    public void TestDeleteQuestionAnswerNegativeNotFoundAnswerInQuestion(){
+    public void TestGetQuestionPositive() {
+        when(questionRepository.findById(any())).thenReturn(Optional.of(
+                new Question(1L, "title", null, TypeOfAnswer.STRING, null)));
+        ResponseEntity<Question> response = questionService.getQuestion(1L);
+        ResponseEntity<Question> expected = ResponseEntity.status(HttpStatus.OK)
+                .body(new Question(1L, "title", null, TypeOfAnswer.STRING, null));
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void TestGetQuestionNegativeNotFoundQuestion() {
+        when(questionRepository.findById(any())).thenReturn(Optional.empty());
+        ResponseEntity<Question> response = questionService.getQuestion(1L);
+        ResponseEntity<Question> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void TestDeleteQuestionNegativeNotFoundQuestion() {
+        when(questionRepository.findById(any())).thenReturn(Optional.empty());
+        ResponseEntity<String> response = questionService.deleteQuestion(1L);
+        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question doesn't exist");
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void TestDeleteQuestionPositive() {
+        when(questionRepository.findById(any())).thenReturn(Optional.of(
+                new Question(1L, "title", null, TypeOfAnswer.STRING, null)));
+        ResponseEntity<String> response = questionService.deleteQuestion(1L);
+        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.OK)
+                .body(new Question(1L, "title", null, TypeOfAnswer.STRING, null).toString());
+        assertEquals(expected, response);
+    }
+
+
+    @Test
+    public void TestDeleteQuestionAnswerNegativeNotFoundAnswerInQuestion() {
         Answer answer = new Answer();
         answer.setId(1L);
         answer.setAnswerText("faqed");
         Question question = new Question();
-        question.setTitle("vgsw");
+        question.setTitle("title");
         question.setId(1L);
         when(questionRepository.findById(1L))
                 .thenReturn(Optional.of(question));
         when(answerRepository.findById(1L)).thenReturn(Optional.of(answer));
-        ResponseEntity<String> response = questionService.deleteQuestionsAnswer(1L, 1L);
+        ResponseEntity<String> response = questionService.deleteQuestionsAnswer("title", 1L);
         ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question doesn't contain this answer");
         assertEquals(expected, response);
     }

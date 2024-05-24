@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.PersonRequest;
-import com.example.demo.models.Answer;
 import com.example.demo.models.Person;
 import com.example.demo.models.Question;
 import com.example.demo.models.Questionnaire;
@@ -15,11 +14,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

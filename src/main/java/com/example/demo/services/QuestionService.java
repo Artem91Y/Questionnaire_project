@@ -76,13 +76,15 @@ public class QuestionService {
         }
     }
 
-    public ResponseEntity<String> deleteQuestionsAnswer(Long id, Long answerId) {
+//    TODO refactor id -> title (in other methods)
+
+    public ResponseEntity<String> deleteQuestionsAnswer(String title, Long answerId) {
         Optional<Answer> answerFromDB = answerRepository.findById(answerId);
         if (answerFromDB.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Answer isn't found");
         }
         Answer answer = answerFromDB.get();
-        Optional<Question> questionFromDB = questionRepository.findById(id);
+        Optional<Question> questionFromDB = questionRepository.findQuestionByTitle(title);
         if (questionFromDB.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question isn't found");
         }
@@ -105,11 +107,33 @@ public class QuestionService {
         }
     }
 
-    public void deleteQuestion(Long id) {
-        questionRepository.deleteById(id);
+
+//    TODO remake delete ResponseEntity<String> -> ResponseEntity<Question>
+    public ResponseEntity<String> deleteQuestion(Long id) {
+        try {
+            if (questionRepository.findById(id).isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question doesn't exist");
+            }
+            Question question = questionRepository.findById(id).get();
+            questionRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(question.toString());
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete question");
+        }
+
     }
 
-    public Question getQuestion(Long id) {
-        return questionRepository.findById(id).get();
+
+    public ResponseEntity<Question> getQuestion(Long id) {
+        try {
+            if (questionRepository.findById(id).isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(questionRepository.findById(id).get());
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
     }
 }

@@ -1,9 +1,7 @@
 package com.example.demo.services;
 
-import com.example.demo.models.Answer;
 import com.example.demo.models.Role;
 import com.example.demo.models.User;
-import com.example.demo.repos.AnswerRepository;
 import com.example.demo.repos.RoleRepository;
 import com.example.demo.repos.UserRepository;
 import org.junit.jupiter.api.Test;
