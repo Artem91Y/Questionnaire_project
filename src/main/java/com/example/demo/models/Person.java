@@ -26,7 +26,6 @@ public class Person {
     private String username;
 
     @ManyToMany
-//    @JoinColumn(name = "passed_questionnaires_ids")
     private Set<Questionnaire> questionnairesPassed;
 
 }

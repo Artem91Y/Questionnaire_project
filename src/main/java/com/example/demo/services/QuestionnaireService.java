@@ -42,8 +42,8 @@ public class QuestionnaireService {
     }
 
 
-    public ResponseEntity<String> updateQuestionnaire(QuestionnaireRequest questionnaire, Long id) {
-        Optional<Questionnaire> questionnaireForRemoval = questionnaireRepository.findById(id);
+    public ResponseEntity<String> updateQuestionnaire(QuestionnaireRequest questionnaire, String name) {
+        Optional<Questionnaire> questionnaireForRemoval = questionnaireRepository.findByName(name);
         if (questionnaireForRemoval.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found");
         }
@@ -68,13 +68,13 @@ public class QuestionnaireService {
         }
     }
 
-    public ResponseEntity<Questionnaire> deleteQuestionnaire(Long id) {
+    public ResponseEntity<Questionnaire> deleteQuestionnaire(String name) {
         try {
-            if (questionnaireRepository.findById(id).isEmpty()){
+            if (questionnaireRepository.findByName(name).isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            Questionnaire question = questionnaireRepository.findById(id).get();
-            questionnaireRepository.deleteById(id);
+            Questionnaire question = questionnaireRepository.findByName(name).get();
+            questionnaireRepository.deleteById(question.getId());
             return ResponseEntity.status(HttpStatus.OK).body(question);
 
         }catch (Exception e){
@@ -83,10 +83,10 @@ public class QuestionnaireService {
     }
 
 
-    public ResponseEntity<Questionnaire> getQuestionnaire(Long id) {
+    public ResponseEntity<Questionnaire> getQuestionnaire(String name) {
         try {
-            if (questionnaireRepository.findById(id).isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(questionnaireRepository.findById(id).get());
+            if (questionnaireRepository.findByName(name).isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(questionnaireRepository.findByName(name).get());
             }
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

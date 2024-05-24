@@ -58,17 +58,17 @@ public class PersonServiceTest {
 
     @Test
     public void TestUpdatePersonPositive(){
-        when(personRepository.findById(1L)).thenReturn(Optional.of(new Person(1L, "vfdsaw", "fcew", null)));
-        ResponseEntity<String> response = personService.updatePerson(1L, new PersonRequest("vda", "bnjiuk"));
+        when(personRepository.findByFullNameLikeIgnoreCase("fullName")).thenReturn(Optional.of(new Person(1L, "vfdsaw", "fcew", null)));
+        ResponseEntity<String> response = personService.updatePerson("fullName", new PersonRequest("vda", "bnjiuk"));
         ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.CREATED).body("Person updated successfully");
         assertEquals(response, expected);
     }
 
     @Test
     public void TestUpdatePersonNegativeBecauseOfWrongId(){
-        when(personRepository.findById(1L)).thenReturn(Optional.empty());
-        ResponseEntity<String> response = personService.updatePerson(1L, new PersonRequest("vda", "bnjiuk"));
-        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Person %s number not found", 1L));
+        when(personRepository.findByFullNameLikeIgnoreCase("fullName")).thenReturn(Optional.empty());
+        ResponseEntity<String> response = personService.updatePerson("fullName", new PersonRequest("vda", "bnjiuk"));
+        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("%s not found", "fullName"));
         assertEquals(response, expected);
     }
 

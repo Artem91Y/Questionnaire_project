@@ -26,13 +26,13 @@ public class PersonController {
     }
 
     @PutMapping("/updatePerson/{id}")
-    public ResponseEntity<String> updatePerson(@RequestBody PersonRequest personRequest, @PathVariable Long id) {
-        return personService.updatePerson(id, personRequest);
+    public ResponseEntity<String> updatePerson(@RequestBody PersonRequest personRequest, @RequestParam String fullName) {
+        return personService.updatePerson(fullName, personRequest);
     }
 
     @DeleteMapping("/deletePerson/{id}")
-    public ResponseEntity<Person> deletePerson(@PathVariable Long id) {
-        return personService.deletePerson(id);
+    public ResponseEntity<Person> deletePerson(@RequestParam String fullName) {
+        return personService.deletePerson(fullName);
     }
 
     @PutMapping("/passQuestionnaire/{questionnaireId}")

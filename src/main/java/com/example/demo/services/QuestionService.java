@@ -40,7 +40,7 @@ public class QuestionService {
                     .body("Question isn't full to be created");
         }
         Question question = new Question();
-        question.setQuestionnaire(questionnaireRepository.findByName(questionRequest.getQuestionnaireName()));
+        question.setQuestionnaire(questionnaireRepository.findByName(questionRequest.getQuestionnaireName()).get());
         question.setTitle(questionRequest.getTitle());
         question.setType(questionRequest.getType());
         try {
@@ -76,7 +76,6 @@ public class QuestionService {
         }
     }
 
-//    TODO refactor id -> title (in other methods)
 
     public ResponseEntity<String> deleteQuestionsAnswer(String title, Long answerId) {
         Optional<Answer> answerFromDB = answerRepository.findById(answerId);

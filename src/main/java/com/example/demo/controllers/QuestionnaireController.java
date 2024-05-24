@@ -22,19 +22,18 @@ public class QuestionnaireController {
     }
 
     @PutMapping("/updateQuestionnaire/{id}")
-    public ResponseEntity<String> updateQuestionnaire(@RequestBody QuestionnaireRequest questionnaire, @PathVariable Long id) {
-
-        return questionnaireService.updateQuestionnaire(questionnaire, id);
+    public ResponseEntity<String> updateQuestionnaire(@RequestBody QuestionnaireRequest questionnaire, @RequestParam String name) {
+        return questionnaireService.updateQuestionnaire(questionnaire, name);
     }
 
     @DeleteMapping("/deleteQuestionnaire/{id}")
-    public ResponseEntity<Questionnaire> deleteQuestionnaire(@PathVariable Long id) {
-        return questionnaireService.deleteQuestionnaire(id);
+    public ResponseEntity<Questionnaire> deleteQuestionnaire(@RequestParam String name) {
+        return questionnaireService.deleteQuestionnaire(name);
     }
 
     @GetMapping("/getQuestionnaire/{id}")
-    public ResponseEntity<Questionnaire> getQuestionnaire(@PathVariable Long id) {
-        return questionnaireService.getQuestionnaire(id);
+    public ResponseEntity<Questionnaire> getQuestionnaire(@RequestParam String name) {
+        return questionnaireService.getQuestionnaire(name);
     }
     @GetMapping("/getActiveQuestionnaires")
     public List<Questionnaire> getActiveQuestionnaires(){
