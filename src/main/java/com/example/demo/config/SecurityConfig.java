@@ -23,7 +23,7 @@ public class SecurityConfig {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((requests) -> {
                     requests.requestMatchers("/get**", "/sign_in**","/v3/api-docs/**", "/passQuestionnaire/**", "/swagger-ui/**").permitAll();
-                    requests.requestMatchers("delete/**", "/update**", "/add**").hasAuthority("ADMIN");
+                    requests.requestMatchers("/delete**", "/update**", "/add**").hasAuthority("ADMIN");
                     requests.anyRequest().authenticated();
                 })
                 .httpBasic(withDefaults())

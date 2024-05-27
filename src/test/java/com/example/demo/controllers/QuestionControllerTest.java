@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -37,8 +38,8 @@ public class QuestionControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(username = "admin", password = "password", roles = {"ADMIN"})
-    public void TestGetQuestionNegativeWrongId() throws Exception {
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestGetQuestionEndpointNegativeWrongId() throws Exception {
         when(questionService.getQuestion(any())).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
         mockMvc.perform(MockMvcRequestBuilders.get("/getQuestion/-1")) // type of method and url
                 .andExpect(MockMvcResultMatchers.status().isNotFound());// expected status
@@ -47,8 +48,8 @@ public class QuestionControllerTest {
 
 
     @Test
-    @WithMockUser(username = "admin", password = "password", roles = {"ADMIN"})
-    public void TestGetQuestionPositive() throws Exception {
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestGetQuestionEndpointPositive() throws Exception {
         Question question = new Question();
         question.setId(1L);
         question.setAnswers(new ArrayList<>());
@@ -57,7 +58,7 @@ public class QuestionControllerTest {
         question.setQuestionnaire(new Questionnaire());
         ResponseEntity<Question> response = ResponseEntity.status(HttpStatus.OK).body(question);
         when(questionService.getQuestion(any())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/getQuestion/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.get("/getQuestion").contentType(MediaType.APPLICATION_JSON).param("title", "title"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(question.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(question.getTitle()))
@@ -66,8 +67,8 @@ public class QuestionControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "password", roles = {"ADMIN"})
-    public void TestDeleteQuestionsAnswerPositive() throws Exception {
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestDeleteQuestionsAnswerEndpointPositive() throws Exception {
         ResponseEntity<String> response = ResponseEntity.status(HttpStatus.OK).body("Answer is deleted successfully");
         when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.delete("/deleteAnswer/1")
@@ -77,14 +78,47 @@ public class QuestionControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "password", roles = {"ADMIN"})
-    public void TestAddQuestionPositive() throws Exception {
-
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestAddQuestionEndpointPositive() throws Exception {
         when(questionService.addQuestion(any(QuestionRequest.class))).thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("Question is created successfully"));
         mockMvc.perform(MockMvcRequestBuilders.post("/addQuestion")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper
-                        .writeValueAsString(new QuestionRequest("title", "name", null))))
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper
+                                .writeValueAsString(new QuestionRequest("title", "name", null))))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().string("Question is created successfully"));
     }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestUpdateQuestionEndpointPositive() throws Exception {
+        when(questionService.updateQuestion(any(QuestionRequest.class), eq("title"))).thenReturn(
+                ResponseEntity.status(HttpStatus.CREATED).body("Question is updated successfully"));
+        mockMvc.perform(MockMvcRequestBuilders.put("/updateQuestion").param("title", "title").contentType(MediaType.APPLICATION_JSON).content(objectMapper
+                    .writeValueAsString(new QuestionRequest("title", "name", null))))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(("Question is updated successfully")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestUpdateQuestionEndpointNegativeNotFound() throws Exception {
+        when(questionService.updateQuestion(any(QuestionRequest.class), eq("title"))).thenReturn(
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question isn't found"));
+        mockMvc.perform(MockMvcRequestBuilders.put("/updateQuestion").param("title", "title").contentType(MediaType.APPLICATION_JSON).content(objectMapper
+                        .writeValueAsString(new QuestionRequest("title", "name", null))))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string(("Question isn't found")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestUpdateQuestionEndpointNegativeException() throws Exception {
+        when(questionService.updateQuestion(any(QuestionRequest.class), eq("title"))).thenReturn(
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Question isn't saved"));
+        mockMvc.perform(MockMvcRequestBuilders.put("/updateQuestion").param("title", "title").contentType(MediaType.APPLICATION_JSON).content(objectMapper
+                        .writeValueAsString(new QuestionRequest("title", "name", null))))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.content().string(("Question isn't saved")));
+    }
+
 }

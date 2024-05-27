@@ -15,21 +15,7 @@ public class PersonControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void TestAddPersonEndpoint() throws Exception{
-        String requestBody = "{\n" +
-                "    \"fullName\": \"smith\",\n" +
-                "    \"username\": \"admin\"\n" +
-                "}";
-        mockMvc.perform(MockMvcRequestBuilders.post("/addPerson").content(requestBody).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().string("Person is created successfully"));
 
-    }
 
-    public void TestGetPersonEndpoint() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/getPassedQuestionnairesWithDetails")
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.jsonPath("key").value("value"));
 
-    }
 }

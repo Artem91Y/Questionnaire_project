@@ -20,22 +20,22 @@ public class QuestionController {
         return questionService.addQuestion(questionRequest);
     }
 
-    @PutMapping("/updateQuestion/{id}")
+    @PutMapping("/updateQuestion")
     public ResponseEntity<String> updateQuestion(@RequestParam String title, @RequestBody QuestionRequest questionRequest) {
         return questionService.updateQuestion(questionRequest, title);
     }
 
-    @GetMapping("/getQuestion/{id}")
+    @GetMapping("/getQuestion")
     public ResponseEntity<Question> getQuestion(@RequestParam String title) {
         return questionService.getQuestion(title);
     }
 
-    @DeleteMapping("/deleteQuestion/{id}")
+    @DeleteMapping("/deleteQuestion")
     public ResponseEntity<Question> deleteQuestion(@RequestParam String title) {
         return questionService.deleteQuestion(title);
     }
 
-    @DeleteMapping("/deleteAnswer/{id}")
+    @DeleteMapping("/deleteAnswer/{answerId}")
     public ResponseEntity<String> deleteAnswer(@PathVariable Long answerId, @RequestParam String title) {
         return questionService.deleteQuestionsAnswer(title, answerId);
     }
