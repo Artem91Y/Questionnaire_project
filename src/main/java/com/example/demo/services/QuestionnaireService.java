@@ -96,7 +96,11 @@ public class QuestionnaireService {
     }
 
 
-    public List<Questionnaire> getActiveQuestionnaires(){
-        return questionnaireRepository.findActiveQuestionnaires(LocalDate.now());
+    public ResponseEntity<List<Questionnaire>> getActiveQuestionnaires(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(questionnaireRepository.findActiveQuestionnaires(LocalDate.now()));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

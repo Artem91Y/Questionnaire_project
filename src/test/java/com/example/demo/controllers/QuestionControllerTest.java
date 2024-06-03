@@ -79,6 +79,28 @@ public class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestDeleteQuestionsAnswerEndpointNegativeNotFound() throws Exception {
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question isn't found");
+        when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteAnswer/1")
+                        .contentType(MediaType.APPLICATION_JSON).param("title", "title"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Question isn't found"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestDeleteQuestionsAnswerEndpointNegativeWrongAnswer() throws Exception {
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question doesn't contain this answer");
+        when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteAnswer/1")
+                        .contentType(MediaType.APPLICATION_JSON).param("title", "title"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Question doesn't contain this answer"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
     public void TestAddQuestionEndpointPositive() throws Exception {
         when(questionService.addQuestion(any(QuestionRequest.class))).thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("Question is created successfully"));
         mockMvc.perform(MockMvcRequestBuilders.post("/addQuestion")
@@ -86,6 +108,17 @@ public class QuestionControllerTest {
                                 .writeValueAsString(new QuestionRequest("title", "name", null))))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().string("Question is created successfully"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestAddQuestionEndpointNegativeNotFullObject() throws Exception {
+        when(questionService.addQuestion(any(QuestionRequest.class))).thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Question isn't full to be created"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/addQuestion")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper
+                                .writeValueAsString(new QuestionRequest("title", "name", null))))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.content().string("Question isn't full to be created"));
     }
 
     @Test
@@ -120,5 +153,29 @@ public class QuestionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().string(("Question isn't saved")));
     }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestDeleteQuestionEndpointPositive() throws Exception {
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.OK).body(null);
+        when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteQuestion")
+                        .contentType(MediaType.APPLICATION_JSON).param("title", "title"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(""));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
+    public void TestDeleteQuestionEndpointNegativeNotFound() throws Exception {
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteQuestion")
+                        .contentType(MediaType.APPLICATION_JSON).param("title", "title"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string(""));
+    }
+
+
 
 }

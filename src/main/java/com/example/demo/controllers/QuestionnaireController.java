@@ -36,7 +36,7 @@ public class QuestionnaireController {
         return questionnaireService.getQuestionnaire(name);
     }
     @GetMapping("/getActiveQuestionnaires")
-    public List<Questionnaire> getActiveQuestionnaires(){
+    public ResponseEntity<List<Questionnaire>> getActiveQuestionnaires(){
         return questionnaireService.getActiveQuestionnaires();
     }
 
