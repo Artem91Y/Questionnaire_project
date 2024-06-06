@@ -15,6 +15,7 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, Lo
 
     Optional<Questionnaire> findByName(String name);
 
-    @Query("SELECT t FROM Questionnaire t WHERE DATEDIFF(t.endTime, :now) > 0 AND DATEDIFF(:now, t.startTime) > 0")
+//    @Query("SELECT t FROM Questionnaire t WHERE DATEDIFF(t.endTime, :now) > 0 AND DATEDIFF(:now, t.startTime) > 0")
+    @Query("SELECT t FROM Questionnaire t WHERE t.endTime > :now AND :now > t.startTime")
     List<Questionnaire> findActiveQuestionnaires(@Param("now") LocalDate now);
 }
