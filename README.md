@@ -1,21 +1,25 @@
 # Questionnaire service
-Our project is made for creating questionnaires in connection with certain or anonymous person. This is realized by using Questionnaire, Question and Person.
+This is project for passing and creating questionnaires in connection with person.
 
 # Technologies used
 - Java
+- Maven
+- Mysql
 - Spring Framework
 - Spring Boot
 - Spring Data JPA
 - Spring Security
-- Lombok
-- Swagger
 - Mockito
 - Junit
-- Mysql
-- Maven
+- Swagger
+- Lombok
+
+
+# Installion  
 
 
 # Using API
+1) /
 1) /passQuestionnaire - allows user to pass questionnaire
 2) /getActiveQuestionnaire - returns all active questionnaires
 3) /deleteQuestionsAnswer - user can cancel his answer
