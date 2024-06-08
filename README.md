@@ -30,4 +30,5 @@ Our project is made for creating questionnaires in connection with certain or an
 API uses MySQL database
 
 # Contributors
-[Artem91Y]{https://github.com/Artem91Y}
+ - [Artem91Y](https://github.com/Artem91Y)
+ - [Zhmurenko Viktor](https://github.com/YTypucT)
