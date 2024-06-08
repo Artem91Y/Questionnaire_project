@@ -63,7 +63,6 @@ public class QuestionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(question.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(question.getTitle()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(question.getType().toString()));
-
     }
 
     @Test
@@ -157,7 +156,7 @@ public class QuestionControllerTest {
     @Test
     @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
     public void TestDeleteQuestionEndpointPositive() throws Exception {
-        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.OK).body(null);
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.OK).build();
         when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.delete("/deleteQuestion")
                         .contentType(MediaType.APPLICATION_JSON).param("title", "title"))
@@ -168,8 +167,8 @@ public class QuestionControllerTest {
     @Test
     @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
     public void TestDeleteQuestionEndpointNegativeNotFound() throws Exception {
-        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        when(questionService.deleteQuestionsAnswer(any(), any())).thenReturn(response);
+        ResponseEntity<Question> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        when(questionService.deleteQuestion(any())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.delete("/deleteQuestion")
                         .contentType(MediaType.APPLICATION_JSON).param("title", "title"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())

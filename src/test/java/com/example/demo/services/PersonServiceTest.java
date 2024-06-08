@@ -60,7 +60,7 @@ public class PersonServiceTest {
     public void TestUpdatePersonPositive(){
         when(personRepository.findByFullNameLikeIgnoreCase("fullName")).thenReturn(Optional.of(new Person(1L, "vfdsaw", "fcew", null)));
         ResponseEntity<String> response = personService.updatePerson("fullName", new PersonRequest("vda", "bnjiuk"));
-        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.CREATED).body("Person updated successfully");
+        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.CREATED).body("Person is updated successfully");
         assertEquals(response, expected);
     }
 
@@ -68,7 +68,7 @@ public class PersonServiceTest {
     public void TestUpdatePersonNegativeBecauseOfWrongId(){
         when(personRepository.findByFullNameLikeIgnoreCase("fullName")).thenReturn(Optional.empty());
         ResponseEntity<String> response = personService.updatePerson("fullName", new PersonRequest("vda", "bnjiuk"));
-        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("%s not found", "fullName"));
+        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("%s isn't found", "fullName"));
         assertEquals(response, expected);
     }
 
@@ -81,7 +81,7 @@ public class PersonServiceTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getName()).thenReturn("smith1");
         ResponseEntity<String> response = personService.passQuestionnaire(1L, List.of("hi", "hello"));
-        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.OK).body("Questionnaire passed successfully");
+        ResponseEntity<String> expected = ResponseEntity.status(HttpStatus.OK).body("Questionnaire was passed successfully");
         assertEquals(response, expected);
     }
 

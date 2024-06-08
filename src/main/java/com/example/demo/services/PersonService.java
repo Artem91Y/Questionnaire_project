@@ -59,7 +59,7 @@ public class PersonService {
         Optional<Person> person = personRepository.findByFullNameLikeIgnoreCase(fullName);
         if (person.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(String.format("%s not found", fullName));
+                    .body(String.format("%s isn't found", fullName));
         }
 
         Person createdPerson = person.get();
@@ -70,23 +70,23 @@ public class PersonService {
         try {
             personRepository.save(createdPerson);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Person updated successfully");
+                    .body("Person is updated successfully");
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Person not updated");
+                    .body("Person isn't updated");
         }
     }
 
     public ResponseEntity<Person> deletePerson(String fullName) {
         try {
-            if (personRepository.findByFullNameLikeIgnoreCase(fullName).isEmpty()){
+            if (personRepository.findByFullNameLikeIgnoreCase(fullName).isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             Person person = personRepository.findByFullNameLikeIgnoreCase(fullName).get();
             personRepository.deleteById(person.getId());
             return ResponseEntity.status(HttpStatus.OK).body(person);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -123,7 +123,7 @@ public class PersonService {
                     .INTERNAL_SERVER_ERROR).body("You gave too many answers");
         }
         Set<Questionnaire> answeringPersonQuestionnaires = answeringPerson.getQuestionnairesPassed();
-        if (answeringPersonQuestionnaires == null){
+        if (answeringPersonQuestionnaires == null) {
             answeringPersonQuestionnaires = new HashSet<>();
         }
         if (answeringPersonQuestionnaires.contains(questionnaire)) {
@@ -141,10 +141,9 @@ public class PersonService {
                 answer.setAnswerText(answers.get(i));
 
                 List<Answer> answersForAdding = question.getAnswers();
-                if (answersForAdding != null){
+                if (answersForAdding != null) {
                     answersForAdding.add(answer);
-                }
-                else{
+                } else {
                     answersForAdding = List.of(answer);
                 }
                 question.setAnswers(answersForAdding);
@@ -154,23 +153,16 @@ public class PersonService {
             questionnaire.setQuestions(answeredQuestions);
             personRepository.save(answeringPerson);
             questionnaireRepository.save(questionnaire);
-            return ResponseEntity.ok("Questionnaire passed successfully");
+            return ResponseEntity.ok("Questionnaire was passed successfully");
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus
                     .INTERNAL_SERVER_ERROR).body("Questionnaire isn't passed");
         }
     }
 
-    public Set<Questionnaire> getPersonQuestionnaires(Long id) {
-        Optional<Person> personFromDB = personRepository.findById(id);
-        if (personFromDB.isEmpty()) {
-            return null;
-        }
-        return personFromDB.get().getQuestionnairesPassed();
-    }
 
-    public Map<String, Map<QuestionRequest, String>> getPassedQuestionnairesWithDetails() {
+
+    public ResponseEntity<Map<String, Map<QuestionRequest, String>>> getPassedQuestionnairesWithDetails() {
         Person person;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName().equals("anonymousUser")) {
@@ -178,7 +170,7 @@ public class PersonService {
         } else {
             Optional<Person> answeringPersonFromDB = personRepository.findByUsername(authentication.getName());
             if (answeringPersonFromDB.isEmpty()) {
-                return null;
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             person = answeringPersonFromDB.get();
         }
@@ -194,8 +186,6 @@ public class PersonService {
                 }
             }
         }
-        return result;
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
-
-
 }

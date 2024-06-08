@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,9 +35,11 @@ public class QuestionnaireRepositoryTest {
         LocalDate endTime = LocalDate.of(LocalDate.now().getYear() + 1, 1, 1);
         Questionnaire questionnaire = new Questionnaire(1L, "name", "description", startTime, endTime, null);
         Questionnaire questionnaire2 = new Questionnaire(2L, "name2", "description", endTime, endTime, null);
-        questionnaireRepository.save(questionnaire);
-        questionnaireRepository.save(questionnaire2);
+        questionnaireRepository.saveAndFlush(questionnaire);
+        questionnaireRepository.saveAndFlush(questionnaire2);
 //        ArrayList<Questionnaire> expected = new ArrayList(List.of(questionnaire));
-        assertThat(questionnaireRepository.findActiveQuestionnaires(LocalDate.now())).hasSize(1).isSameAs(new ArrayList(List.of(questionnaire)));
+        assertThat(questionnaireRepository.findActiveQuestionnaires(LocalDate.now())).hasSize(1);
+        assertThat(questionnaireRepository.findActiveQuestionnaires(LocalDate.now()).get(0).getStartTime()).isBefore(LocalDate.now());
+        assertThat(questionnaireRepository.findActiveQuestionnaires(LocalDate.now()).get(0).getEndTime()).isAfter(LocalDate.now());
     }
 }

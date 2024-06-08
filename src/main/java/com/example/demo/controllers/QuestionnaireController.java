@@ -21,17 +21,17 @@ public class QuestionnaireController {
         return questionnaireService.addQuestionnaire(questionnaire);
     }
 
-    @PutMapping("/updateQuestionnaire/{id}")
+    @PutMapping("/updateQuestionnaire")
     public ResponseEntity<String> updateQuestionnaire(@RequestBody QuestionnaireRequest questionnaire, @RequestParam String name) {
         return questionnaireService.updateQuestionnaire(questionnaire, name);
     }
 
-    @DeleteMapping("/deleteQuestionnaire/{id}")
+    @DeleteMapping("/deleteQuestionnaire")
     public ResponseEntity<Questionnaire> deleteQuestionnaire(@RequestParam String name) {
         return questionnaireService.deleteQuestionnaire(name);
     }
 
-    @GetMapping("/getQuestionnaire/{id}")
+    @GetMapping("/getQuestionnaire")
     public ResponseEntity<Questionnaire> getQuestionnaire(@RequestParam String name) {
         return questionnaireService.getQuestionnaire(name);
     }

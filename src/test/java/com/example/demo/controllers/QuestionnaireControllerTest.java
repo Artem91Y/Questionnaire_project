@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -44,7 +46,7 @@ public class QuestionnaireControllerTest {
                 LocalDate.of(LocalDate.EPOCH.getYear() + 1, 1, 1),
                 "name",
                 "description");
-        when(questionnaireService.addQuestionnaire(questionnaire))
+        when(questionnaireService.addQuestionnaire(any(QuestionnaireRequest.class)))
                 .thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("Questionnaire is created successfully"));
         mockMvc.perform(MockMvcRequestBuilders.post("/addQuestionnaire").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(questionnaire)))
@@ -60,7 +62,7 @@ public class QuestionnaireControllerTest {
                 LocalDate.of(LocalDate.EPOCH.getYear() + 1, 1, 1),
                 "name",
                 "description");
-        when(questionnaireService.addQuestionnaire(questionnaire))
+        when(questionnaireService.addQuestionnaire(any(QuestionnaireRequest.class)))
                 .thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Questionnaire isn't full to be created"));
         mockMvc.perform(MockMvcRequestBuilders.post("/addQuestionnaire").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(questionnaire)))
@@ -76,25 +78,25 @@ public class QuestionnaireControllerTest {
                 LocalDate.of(LocalDate.EPOCH.getYear() + 1, 1, 1),
                 "name",
                 "description");
-        when(questionnaireService.updateQuestionnaire(questionnaire, "name"))
-                .thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("Questionnaire is updated successfully"));
+        when(questionnaireService.updateQuestionnaire(any(QuestionnaireRequest.class), anyString()))
+                .thenReturn(ResponseEntity.status(HttpStatus.OK).body("Questionnaire is updated successfully"));
         mockMvc.perform(MockMvcRequestBuilders.put("/updateQuestionnaire").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(questionnaire)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+                        .content(objectMapper.writeValueAsString(questionnaire)).param("name", "name"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Questionnaire is updated successfully"));
     }
 
     @Test
     @WithMockUser(username = "admin", password = "password", authorities = {"ADMIN"})
-    public void TestUpdateQuestionnairePositiveNegativeNotFoundQuestionnaire() throws Exception {
+    public void TestUpdateQuestionnaireNegativeNotFoundQuestionnaire() throws Exception {
         QuestionnaireRequest questionnaire = new QuestionnaireRequest(
                 LocalDate.of(1000, 5, 1),
                 LocalDate.of(LocalDate.EPOCH.getYear() + 1, 1, 1),
                 "name",
                 "description");
-        when(questionnaireService.updateQuestionnaire(questionnaire, "wrongName"))
+        when(questionnaireService.updateQuestionnaire(any(QuestionnaireRequest.class), anyString()))
                 .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Questionnaire isn't found"));
-        mockMvc.perform(MockMvcRequestBuilders.put("/updateQuestionnaire").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.put("/updateQuestionnaire").param("name", "name").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(questionnaire)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Questionnaire isn't found"));
@@ -135,7 +137,7 @@ public class QuestionnaireControllerTest {
                 LocalDate.of(1000, 5, 1),
                 LocalDate.of(LocalDate.EPOCH.getYear() + 1, 1, 1),
                 null);
-        when(questionnaireService.deleteQuestionnaire("name")).thenReturn(ResponseEntity.status(HttpStatus.OK).body(questionnaire));
+        when(questionnaireService.getQuestionnaire("name")).thenReturn(ResponseEntity.status(HttpStatus.OK).body(questionnaire));
         mockMvc.perform(MockMvcRequestBuilders.get("/getQuestionnaire").param("name", "name"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(questionnaire)));
@@ -159,8 +161,9 @@ public class QuestionnaireControllerTest {
                 LocalDate.of(1000, 5, 1),
                 LocalDate.of(LocalDate.EPOCH.getYear() + 1, 1, 1),
                 null);
-        when(questionnaireService.getActiveQuestionnaires()).thenReturn(ResponseEntity.status(HttpStatus.OK).body(List.of(questionnaire)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/getQuestionnaire").param("name", "name"))
+        ResponseEntity<List<Questionnaire>> response = ResponseEntity.status(HttpStatus.OK).body(List.of(questionnaire));
+        when(questionnaireService.getActiveQuestionnaires()).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/getActiveQuestionnaires").param("name", "name"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(List.of(questionnaire))));
     }
