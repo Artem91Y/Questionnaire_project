@@ -91,11 +91,6 @@
 			<artifactId>spring-boot-autoconfigure</artifactId>
 			<version>3.2.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.angus</groupId>
-			<artifactId>jakarta.mail</artifactId>
-			<version>2.0.2</version>
-		</dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -122,7 +117,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.example.demo.ServiceAvioticketsApplication</mainClass>
+							<mainClass>com.example.demo.DemoApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

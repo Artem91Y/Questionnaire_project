@@ -1,0 +1,28 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "%Natascha918_"
+      MYSQL_DATABASE: questionnaire_project
+#      MYSQL_USER: my_username
+#      MYSQL_PASSWORD: my_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  springboot-app:
+    build: .
+    container_name: questionnaire_project
+    environment:
+      USER_DB: root
+      PASS_DB: "%Natascha918_"
+      URL_DB: "jdbc:mysql://mysql:3306/questionnaire_project?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
